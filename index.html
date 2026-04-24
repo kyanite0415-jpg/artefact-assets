@@ -1,0 +1,832 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Homemade+Apple&family=Special+Elite&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Special Elite', 'Courier New', monospace;
+    background: #f5f5f0;
+    color: #333373;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+  .container {
+    max-width: 640px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid #333373;
+    padding: 2.5rem 2rem;
+    position: relative;
+    min-height: 500px;
+  }
+  .step { display: none; }
+  .step.active { display: block; animation: fadeIn 0.8s ease; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  h1 {
+    font-size: 20px;
+    font-weight: normal;
+    text-align: center;
+    letter-spacing: 3px;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 11px;
+    letter-spacing: 2px;
+    opacity: 0.7;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+  }
+  .divider {
+    border: none;
+    border-top: 1px solid #333373;
+    margin: 1.5rem 0;
+  }
+  p { font-size: 13px; line-height: 1.8; margin-bottom: 1rem; }
+  .question { font-size: 14px; margin-bottom: 1rem; }
+  .checkbox-group { margin: 1.5rem 0; }
+  .checkbox-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    border: 0.5px solid transparent;
+    font-size: 13px;
+  }
+  .checkbox-item:hover { border-color: #333373; background: #f9f9f7; }
+  .checkbox-item input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border: 1px solid #333373;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+    margin-top: 2px;
+    background: #fff;
+  }
+  .checkbox-item input[type="checkbox"]:checked::after {
+    content: "X";
+    position: absolute;
+    top: -4px;
+    left: 1px;
+    font-size: 14px;
+    color: #333373;
+    font-family: 'Homemade Apple', cursive;
+  }
+  .btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    margin-top: 2rem;
+    background: #fff;
+    color: #333373;
+    border: 1px solid #333373;
+    font-family: 'Special Elite', monospace;
+    font-size: 12px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    text-transform: uppercase;
+  }
+  .btn:hover:not(:disabled) { background: #333373; color: #fff; }
+  .btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .field-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 12px;
+  }
+  .field-label { opacity: 0.7; letter-spacing: 1px; text-transform: uppercase; font-size: 10px; }
+  .field-value {
+    font-family: 'Homemade Apple', cursive;
+    font-size: 14px;
+    border-bottom: 0.5px solid #333373;
+    min-width: 180px;
+    text-align: right;
+    padding-bottom: 2px;
+  }
+  .field-input {
+    background: transparent;
+    border: none;
+    border-bottom: 0.5px solid #333373;
+    outline: none;
+    color: #333373;
+    font-family: 'Homemade Apple', cursive;
+    font-size: 14px;
+    text-align: right;
+    padding-bottom: 2px;
+  }
+  .field-input::placeholder {
+    color: #333373;
+    opacity: 0.3;
+    font-family: 'Special Elite', monospace;
+    font-size: 12px;
+  }
+  .diagnosis-box {
+    border: 1px solid #333373;
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+  }
+  .diagnosis-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.6;
+    margin-bottom: 8px;
+  }
+  .diagnosis-name {
+    font-family: 'Homemade Apple', cursive;
+    font-size: 16px;
+    margin-bottom: 1rem;
+  }
+  .diagnosis-desc { font-size: 12px; line-height: 1.7; }
+  .consent-item {
+    display: flex;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 0.5px dashed #333373;
+    font-size: 12px;
+    line-height: 1.6;
+    align-items: flex-start;
+  }
+  .consent-item:last-child { border-bottom: none; }
+  .consent-item input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    border: 1px solid #333373;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-top: 4px;
+    background: #fff;
+    position: relative;
+  }
+  .consent-item input[type="checkbox"]:checked::after {
+    content: "X";
+    position: absolute;
+    font-size: 12px;
+    color: #333373;
+    font-family: 'Homemade Apple', cursive;
+    top: -5px;
+    left: 0;
+  }
+  .signature-box {
+    border-bottom: 1px solid #333373;
+    height: 40px;
+    margin: 1.5rem 0 0.5rem;
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+  }
+  .signature-input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: 'Homemade Apple', cursive;
+    font-size: 20px;
+    color: #333373;
+  }
+  .prescription {
+    border: 1px solid #333373;
+    padding: 1.5rem;
+    margin: 1rem 0;
+  }
+  .pill-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 0.5px dashed #333373;
+    font-size: 12px;
+  }
+  .pill-row:last-child { border-bottom: none; }
+  .pill-name { font-family: 'Homemade Apple', cursive; font-size: 14px; }
+  .take-btn {
+    background: transparent;
+    border: 0.5px solid #333373;
+    color: #333373;
+    padding: 4px 14px;
+    cursor: pointer;
+    font-family: 'Special Elite', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .take-btn:hover { background: #333373; color: #fff; }
+  .take-btn.taken { opacity: 0.3; cursor: default; pointer-events: none; }
+  .take-btn.taken::after { content: " ✓"; }
+  .clock-display {
+    text-align: center;
+    font-family: 'Homemade Apple', cursive;
+    font-size: 48px;
+    margin: 2rem 0 1rem;
+    letter-spacing: 4px;
+  }
+  .counter-box {
+    text-align: center;
+    margin: 2rem 0;
+    padding: 1.5rem;
+    border: 0.5px solid #333373;
+  }
+  .counter-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.6;
+    margin-bottom: 8px;
+  }
+  .counter-value {
+    font-family: 'Homemade Apple', cursive;
+    font-size: 32px;
+  }
+  .counter-note {
+    font-size: 11px;
+    opacity: 0.7;
+    margin-top: 12px;
+    font-style: italic;
+  }
+  .final-message { font-size: 13px; line-height: 1.9; margin: 1.5rem 0; }
+  .warning {
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-align: center;
+    margin-top: 2rem;
+    padding: 12px;
+    border: 0.5px solid #333373;
+    opacity: 0.8;
+    text-transform: uppercase;
+  }
+  .progress {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 10px;
+    letter-spacing: 2px;
+    opacity: 0.5;
+  }
+  .footer {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 9px;
+    letter-spacing: 2px;
+    opacity: 0.4;
+    text-transform: uppercase;
+  }
+  .small { font-size: 10px; opacity: 0.6; }
+
+  .step1-logo {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+  }
+
+  #step1 h1 {
+    margin-top: 20px;
+  }
+  .flicker { animation: flicker 3s infinite; }
+  @keyframes flicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  .dev-panel {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    z-index: 9999;
+    display: flex;
+    gap: 8px;
+  }
+  .dev-btn {
+    background: #fff;
+    border: 1px solid #333373;
+    color: #333373;
+    padding: 6px 12px;
+    font-family: monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+  .dev-btn:hover { opacity: 1; }
+  .dev-btn.on { background: #333373; color: #fff; opacity: 1; }
+  .dev-btn.reset { border-color: #aa3333; color: #aa3333; }
+
+  #step7 { text-align: center; padding: 3rem 1rem; }
+  .analog-clock { display: flex; justify-content: center; margin: 2rem 0; }
+  .returned-caption {
+    font-family: 'Homemade Apple', cursive;
+    font-size: 13px;
+    opacity: 0.5;
+    margin-top: 2rem;
+  }
+</style>
+
+<div class="dev-panel">
+  <button class="dev-btn reset" onclick="window.resetAll()">Reset</button>
+  <button class="dev-btn" id="testBtn" onclick="window.toggleTest()">Test: OFF</button>
+</div>
+
+<div class="container">
+  <div class="progress" id="progress">01 / 05</div>
+
+  <div class="step active" id="step1">
+    <h1>Intake form</h1>
+    <p class="subtitle">Social Chronology Clinic</p>
+    <hr class="divider">
+    <p class="question">Please mark any of the following you have experienced in the past 30 days:</p>
+    <div class="checkbox-group">
+      <label class="checkbox-item"><input type="checkbox" class="symptom"><span>I cannot fall asleep at the expected time at night.</span></label>
+      <label class="checkbox-item"><input type="checkbox" class="symptom"><span>I feel sleepy during the day when I am expected to work or study.</span></label>
+      <label class="checkbox-item"><input type="checkbox" class="symptom"><span>I am unable to concentrate on tasks that are required of me.</span></label>
+      <label class="checkbox-item"><input type="checkbox" class="symptom"><span>I have been described as lazy, slow, or unmotivated by others.</span></label>
+      <label class="checkbox-item"><input type="checkbox" class="symptom"><span>My natural rhythm does not align with the schedule I am expected to keep.</span></label>
+      <label class="checkbox-item"><input type="checkbox" class="symptom"><span>I want to live at my own pace but feel I am not allowed to.</span></label>
+    </div>
+    <button class="btn" onclick="window.goto(2)">Submit for evaluation</button>
+  </div>
+
+  <div class="step" id="step2">
+    <h1>Diagnostic result</h1>
+    <p class="subtitle">Consultation summary</p>
+    <hr class="divider">
+    <div class="field-row">
+      <span class="field-label">Patient</span>
+      <input type="text" id="patientName" class="field-value field-input" placeholder="(your name)">
+    </div>
+    <div class="field-row"><span class="field-label">Date</span><span class="field-value" id="dateField"></span></div>
+    <div class="field-row"><span class="field-label">Reference</span><span class="field-value" id="refField"></span></div>
+    <div class="diagnosis-box">
+      <div class="diagnosis-label">Condition identified</div>
+      <div class="diagnosis-name">Chronic Temporal Misalignment</div>
+      <div class="diagnosis-desc">
+        The patient retains an internal sense of time that does not conform to external temporal demands. This manifests as resistance to scheduled waking, scheduled sleep, and scheduled productivity. The patient reports a desire to live at their own pace, which is incompatible with contemporary social and occupational requirements.
+        <br><br>
+        Left untreated, the patient's internal rhythm will continue to diverge from institutional time, resulting in reduced availability, missed deadlines, and negative evaluation by others.
+      </div>
+    </div>
+    <div class="diagnosis-box">
+      <div class="diagnosis-label">Recommended course of action</div>
+      <div class="diagnosis-desc">
+        A single medication is prescribed. It is designed to replace the patient's internal time with external time, allowing the patient to move, rest, and respond according to schedule — without internal resistance.
+      </div>
+    </div>
+    <button class="btn" id="diagnosisBtn" onclick="window.goto(3)" disabled>Proceed to consent</button>
+  </div>
+
+  <div class="step" id="step3">
+    <h1>Consent form</h1>
+    <p class="subtitle">Please read and sign</p>
+    <hr class="divider">
+    <p class="small">By proceeding with treatment, the patient agrees to the following:</p>
+    <div style="margin: 1.5rem 0;">
+      <label class="consent-item"><input type="checkbox" class="consent"><span>I understand that this medication will adjust my biological rhythm to match the schedule required by my work, school, or other institutions.</span></label>
+      <label class="consent-item"><input type="checkbox" class="consent"><span>I accept that I may experience persistent fatigue. This is a known outcome and not grounds for discontinuation.</span></label>
+      <label class="consent-item"><input type="checkbox" class="consent"><span>I acknowledge that reduced interest in personal hobbies and a diminished capacity to feel small emotions are expected effects.</span></label>
+      <label class="consent-item"><input type="checkbox" class="consent"><span>I agree that my treatment has no scheduled end date. Long-term continuation has not been evaluated.</span></label>
+      <label class="consent-item"><input type="checkbox" class="consent"><span>I understand that discontinuing treatment may result in being perceived as non-functional by others.</span></label>
+    </div>
+    <p class="small" style="margin-top: 1.5rem;">Signature:</p>
+    <div class="signature-box">
+      <input type="text" class="signature-input" id="signature" placeholder="(sign here)">
+    </div>
+    <p class="small" style="text-align: right;">Date: <span id="dateSignature"></span></p>
+    <button class="btn" id="consentBtn" onclick="window.goto(4)" disabled>I agree and consent</button>
+  </div>
+
+  <div class="step" id="step4">
+    <h1>Prescription issued</h1>
+    <p class="subtitle">Chronoform</p>
+    <hr class="divider">
+    <div class="prescription">
+      <div class="pill-row">
+        <div>
+          <div class="pill-name">Chronoform</div>
+          <div class="small">Take as needed</div>
+        </div>
+        <button class="take-btn" data-pill="1" onclick="window.takeFirst(this)">Take</button>
+      </div>
+    </div>
+    <div style="margin-top: 1.5rem;">
+      <p class="diagnosis-label">What this medication does</p>
+      <ul style="font-size: 12px; line-height: 1.8; margin-top: 8px; padding-left: 20px;">
+        <li>Suppresses your internal sense of time.</li>
+        <li>Allows you to act, rest, and focus according to the time required of you, rather than the time your body feels.</li>
+        <li>Removes the discomfort of being awake when you should sleep, or sleepy when you should work.</li>
+        <li>Reduces the awareness of time passing, so that hours of scheduled activity feel shorter, and personal time does not feel wasted.</li>
+      </ul>
+    </div>
+    <div style="margin-top: 1.5rem;">
+      <p class="diagnosis-label">Side effects</p>
+      <ul style="font-size: 12px; line-height: 1.8; margin-top: 8px; padding-left: 20px;">
+        <li>Gradual loss of the ability to feel small emotions during scheduled hours.</li>
+        <li>Difficulty forming long-term plans or a coherent sense of your own life.</li>
+        <li>A vague sense that time is no longer yours. This is expected and will stabilize.</li>
+      </ul>
+    </div>
+    <button class="btn" id="proceedBtn" onclick="window.goto(5)" disabled>Begin treatment</button>
+  </div>
+
+  <div class="step" id="step5">
+    <h1 class="flicker">Treatment in progress</h1>
+    <p class="subtitle">Day <span id="dayCount">1</span> of indefinite</p>
+    <hr class="divider">
+    <div class="clock-display" id="clockDisplay">—</div>
+    <div class="counter-box">
+      <div class="counter-label">Next dose in</div>
+      <div class="counter-value" id="nextDose">24:00:00</div>
+      <div class="counter-note">Remain available until alarm.<br>Do not close this window.</div>
+    </div>
+    <div class="final-message">
+      <p>Treatment has begun. Your schedule is now aligned with institutional time.</p>
+      <p>You will wake at 07:00. You will work at 12:00. You will sleep at 22:00.</p>
+      <p>Any sensation of time that feels longer, slower, or yours — is a side effect, and will fade.</p>
+    </div>
+    <div class="warning">Do not close this window.<br>You have already agreed.</div>
+    <p class="footer" style="margin-top: 3rem;">Social Chronology Clinic · Est. indefinite</p>
+  </div>
+
+  <div class="step" id="step6">
+    <h1 class="flicker">Time for your next dose</h1>
+    <p class="subtitle">Alarm will not stop until medication is administered</p>
+    <hr class="divider">
+    <div class="clock-display" id="alarmClock" style="font-size: 56px;">—</div>
+    <div class="prescription" style="margin-top: 2rem;">
+      <div class="pill-row">
+        <div>
+          <div class="pill-name">Chronoform</div>
+          <div class="small">Take now</div>
+        </div>
+        <button class="take-btn" onclick="window.takeAlarmDose()">Take</button>
+      </div>
+    </div>
+    <p class="small" style="text-align: center; margin-top: 1.5rem;">Alarm continues until dose is taken.</p>
+  </div>
+
+  <div class="step" id="step7">
+    <div class="analog-clock">
+      <svg viewBox="0 0 200 200" width="240" height="240">
+        <circle cx="100" cy="100" r="95" fill="#fff" stroke="#333373" stroke-width="1.5"/>
+        <circle cx="100" cy="100" r="3" fill="#333373"/>
+        <g id="hourMarks"></g>
+        <g id="minuteMarks"></g>
+        <line id="hourHand" x1="100" y1="100" x2="100" y2="55" stroke="#333373" stroke-width="3" stroke-linecap="round"/>
+        <line id="minuteHand" x1="100" y1="100" x2="100" y2="35" stroke="#333373" stroke-width="2" stroke-linecap="round"/>
+        <line id="secondHand" x1="100" y1="100" x2="100" y2="25" stroke="#333373" stroke-width="1" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <p class="returned-caption">—</p>
+  </div>
+</div>
+
+<script>
+(function() {
+  var STATE = {
+    testMode: localStorage.getItem('testMode') === 'true',
+    doseInterval: 0,
+    awayThreshold: 0,
+    doseStartTime: 0,
+    hiddenAt: 0,
+    lastInteraction: 0,
+    dayCount: 1,
+    takenFirst: false,
+    takenDaily: false,
+    alarmCtx: null,
+    alarmPlaying: false,
+    audioUnlocked: false,
+    patientName: ''
+  };
+
+  function updateIntervals() {
+    STATE.doseInterval = STATE.testMode ? 10000 : 86400000;
+    STATE.awayThreshold = STATE.testMode ? 5000 : 86400000;
+  }
+  updateIntervals();
+
+  function updateTestUI() {
+    var btn = document.getElementById('testBtn');
+    if (STATE.testMode) {
+      btn.textContent = 'Test: ON (10s)';
+      btn.classList.add('on');
+    } else {
+      btn.textContent = 'Test: OFF';
+      btn.classList.remove('on');
+    }
+  }
+  updateTestUI();
+
+  window.toggleTest = function() {
+    STATE.testMode = !STATE.testMode;
+    localStorage.clear();
+    localStorage.setItem('testMode', STATE.testMode);
+    location.reload();
+  };
+
+  window.resetAll = function() {
+    localStorage.clear();
+    location.reload();
+  };
+
+  var today = new Date();
+  var dateStr = today.getFullYear() + '/' + String(today.getMonth()+1).padStart(2,'0') + '/' + String(today.getDate()).padStart(2,'0');
+  document.getElementById('dateField').textContent = dateStr;
+  document.getElementById('dateSignature').textContent = dateStr;
+  document.getElementById('refField').textContent = 'SCC-' + Math.floor(Math.random()*9000+1000);
+
+  window.goto = function(n) {
+    if (n === 2 && !STATE.audioUnlocked) {
+      try {
+        var tempCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (tempCtx.state === 'suspended') {
+          tempCtx.resume();
+        }
+        var osc = tempCtx.createOscillator();
+        var gain = tempCtx.createGain();
+        gain.gain.value = 0;
+        osc.connect(gain);
+        gain.connect(tempCtx.destination);
+        osc.start();
+        osc.stop(tempCtx.currentTime + 0.01);
+        STATE.audioUnlocked = true;
+        setTimeout(function() {
+          try { tempCtx.close(); } catch(e) {}
+        }, 100);
+      } catch(e) {
+        console.log('Audio unlock failed:', e.message);
+      }
+    }
+    var steps = document.querySelectorAll('.step');
+    for (var i = 0; i < steps.length; i++) steps[i].classList.remove('active');
+    document.getElementById('step' + n).classList.add('active');
+    var prog = document.getElementById('progress');
+    if (prog) prog.textContent = '0' + n + ' / 05';
+    window.scrollTo({top: 0, behavior: 'smooth'});
+    if (n === 5) startTreatment();
+    if (n === 7) showClock();
+  };
+
+  var consents = document.querySelectorAll('.consent');
+  var signatureInput = document.getElementById('signature');
+  var consentBtn = document.getElementById('consentBtn');
+
+  function checkConsent() {
+    var allChecked = true;
+    for (var i = 0; i < consents.length; i++) {
+      if (!consents[i].checked) { allChecked = false; break; }
+    }
+    var signed = signatureInput.value.trim().length > 0;
+    consentBtn.disabled = !(allChecked && signed);
+  }
+  for (var i = 0; i < consents.length; i++) {
+    consents[i].addEventListener('change', checkConsent);
+  }
+  signatureInput.addEventListener('input', checkConsent);
+
+  window.takeFirst = function(btn) {
+    btn.classList.add('taken');
+    btn.textContent = 'Taken';
+    STATE.takenFirst = true;
+    document.getElementById('proceedBtn').disabled = false;
+  };
+
+  window.takeAlarmDose = function() {
+    stopAlarm();
+    STATE.dayCount++;
+    var dayCountEl = document.getElementById('dayCount');
+    if (dayCountEl) dayCountEl.textContent = STATE.dayCount;
+    STATE.doseStartTime = Date.now();
+    var steps = document.querySelectorAll('.step');
+    for (var i = 0; i < steps.length; i++) steps[i].classList.remove('active');
+    document.getElementById('step5').classList.add('active');
+    var prog = document.getElementById('progress');
+    if (prog) prog.textContent = '05 / 05';
+  };
+
+  var patientNameInput = document.getElementById('patientName');
+  var diagnosisBtn = document.getElementById('diagnosisBtn');
+  if (patientNameInput && diagnosisBtn) {
+    patientNameInput.addEventListener('input', function() {
+      STATE.patientName = patientNameInput.value.trim();
+      diagnosisBtn.disabled = STATE.patientName.length === 0;
+    });
+  }
+
+  function startTreatment() {
+    STATE.doseStartTime = Date.now();
+    updateMainClock();
+  }
+
+  function updateMainClock() {
+    var now = new Date();
+    var h = String(now.getHours()).padStart(2,'0');
+    var m = String(now.getMinutes()).padStart(2,'0');
+    var s = String(now.getSeconds()).padStart(2,'0');
+    var txt = h + ':' + m + ':' + s;
+    var d1 = document.getElementById('clockDisplay');
+    var d2 = document.getElementById('alarmClock');
+    if (d1) d1.textContent = txt;
+    if (d2) d2.textContent = txt;
+  }
+
+  setInterval(function() {
+    updateMainClock();
+    var activeStep = document.querySelector('.step.active');
+    if (!activeStep) return;
+    var stepId = activeStep.id;
+
+    if (stepId === 'step5') {
+      if (STATE.doseStartTime > 0) {
+        var remaining = (STATE.doseStartTime + STATE.doseInterval) - Date.now();
+        var el = document.getElementById('nextDose');
+        if (el) {
+          if (remaining > 0) {
+            var h = String(Math.floor(remaining / 3600000)).padStart(2,'0');
+            var m = String(Math.floor((remaining % 3600000) / 60000)).padStart(2,'0');
+            var s = String(Math.floor((remaining % 60000) / 1000)).padStart(2,'0');
+            el.textContent = h + ':' + m + ':' + s;
+          } else {
+            el.textContent = '00:00:00';
+            triggerAlarm();
+          }
+        }
+      }
+    }
+
+    if (STATE.testMode && stepId === 'step6') {
+      if (STATE.lastInteraction === 0) STATE.lastInteraction = Date.now();
+      var idleTime = Date.now() - STATE.lastInteraction;
+      if (idleTime > STATE.awayThreshold) {
+        stopAlarm();
+        window.goto(7);
+      }
+    } else {
+      STATE.lastInteraction = Date.now();
+    }
+  }, 1000);
+
+  function registerInteraction() {
+    STATE.lastInteraction = Date.now();
+  }
+  document.addEventListener('mousemove', registerInteraction);
+  document.addEventListener('click', registerInteraction);
+  document.addEventListener('keydown', registerInteraction);
+  document.addEventListener('scroll', registerInteraction);
+  document.addEventListener('touchstart', registerInteraction);
+
+  function triggerAlarm() {
+    if (document.querySelector('.step.active').id === 'step6') return;
+    var steps = document.querySelectorAll('.step');
+    for (var i = 0; i < steps.length; i++) steps[i].classList.remove('active');
+    document.getElementById('step6').classList.add('active');
+    var prog = document.getElementById('progress');
+    if (prog) prog.textContent = 'ALARM';
+    startAlarm();
+    document.title = 'TIME FOR YOUR NEXT DOSE';
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
+
+  function startAlarm() {
+    if (STATE.alarmPlaying) return;
+    STATE.alarmPlaying = true;
+    try {
+      STATE.alarmCtx = new (window.AudioContext || window.webkitAudioContext)();
+      playBell();
+    } catch(e) {
+      console.log('Audio context failed:', e.message);
+    }
+  }
+
+  function playBell() {
+    if (!STATE.alarmCtx || !STATE.alarmPlaying) return;
+    var ctx = STATE.alarmCtx;
+    var now = ctx.currentTime;
+    var freqs = [1800, 2400, 3000, 3600];
+    for (var i = 0; i < freqs.length; i++) {
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      var trem = ctx.createOscillator();
+      var tremG = ctx.createGain();
+      osc.type = 'square';
+      osc.frequency.value = freqs[i];
+      trem.type = 'sine';
+      trem.frequency.value = 40;
+      tremG.gain.value = 0.15;
+      trem.connect(tremG);
+      tremG.connect(gain.gain);
+      gain.gain.setValueAtTime(0, now);
+      gain.gain.linearRampToValueAtTime(0.05, now + 0.01);
+      gain.gain.setValueAtTime(0.05, now + 0.85);
+      gain.gain.linearRampToValueAtTime(0, now + 0.9);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      trem.start(now);
+      osc.stop(now + 0.9);
+      trem.stop(now + 0.9);
+    }
+    setTimeout(function() {
+      var activeStep = document.querySelector('.step.active');
+      if (activeStep && activeStep.id === 'step6' && STATE.alarmPlaying) playBell();
+    }, 1100);
+  }
+
+  function stopAlarm() {
+    STATE.alarmPlaying = false;
+    if (STATE.alarmCtx) {
+      try { STATE.alarmCtx.close(); } catch(e) {}
+      STATE.alarmCtx = null;
+    }
+    document.title = 'Treatment in progress';
+  }
+
+  document.addEventListener('visibilitychange', function() {
+    var activeStep = document.querySelector('.step.active');
+    if (!activeStep) return;
+    var stepId = activeStep.id;
+    if (stepId !== 'step6') return;
+
+    if (document.visibilityState === 'hidden') {
+      STATE.hiddenAt = Date.now();
+    } else {
+      if (STATE.hiddenAt > 0) {
+        var awayTime = Date.now() - STATE.hiddenAt;
+        STATE.hiddenAt = 0;
+        if (awayTime > STATE.awayThreshold) {
+          stopAlarm();
+          window.goto(7);
+        }
+      }
+    }
+  });
+
+  function buildClockMarks() {
+    var hourMarks = document.getElementById('hourMarks');
+    var minuteMarks = document.getElementById('minuteMarks');
+    if (!hourMarks || hourMarks.children.length > 0) return;
+    for (var i = 0; i < 12; i++) {
+      var angle = (i * 30) * Math.PI / 180;
+      var x1 = 100 + Math.sin(angle) * 85;
+      var y1 = 100 - Math.cos(angle) * 85;
+      var x2 = 100 + Math.sin(angle) * 78;
+      var y2 = 100 - Math.cos(angle) * 78;
+      var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', x1);
+      line.setAttribute('y1', y1);
+      line.setAttribute('x2', x2);
+      line.setAttribute('y2', y2);
+      line.setAttribute('stroke', '#333373');
+      line.setAttribute('stroke-width', '2');
+      hourMarks.appendChild(line);
+    }
+    for (var i = 0; i < 60; i++) {
+      if (i % 5 === 0) continue;
+      var angle = (i * 6) * Math.PI / 180;
+      var x1 = 100 + Math.sin(angle) * 88;
+      var y1 = 100 - Math.cos(angle) * 88;
+      var x2 = 100 + Math.sin(angle) * 84;
+      var y2 = 100 - Math.cos(angle) * 84;
+      var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', x1);
+      line.setAttribute('y1', y1);
+      line.setAttribute('x2', x2);
+      line.setAttribute('y2', y2);
+      line.setAttribute('stroke', '#333373');
+      line.setAttribute('stroke-width', '0.5');
+      minuteMarks.appendChild(line);
+    }
+  }
+
+  function updateAnalogClock() {
+    var now = new Date();
+    var h = now.getHours() % 12;
+    var m = now.getMinutes();
+    var s = now.getSeconds();
+    var hA = (h + m/60) * 30;
+    var mA = (m + s/60) * 6;
+    var sA = s * 6;
+    var hh = document.getElementById('hourHand');
+    var mh = document.getElementById('minuteHand');
+    var sh = document.getElementById('secondHand');
+    if (hh) hh.setAttribute('transform', 'rotate(' + hA + ' 100 100)');
+    if (mh) mh.setAttribute('transform', 'rotate(' + mA + ' 100 100)');
+    if (sh) sh.setAttribute('transform', 'rotate(' + sA + ' 100 100)');
+  }
+
+  function showClock() {
+    buildClockMarks();
+    updateAnalogClock();
+    setInterval(updateAnalogClock, 1000);
+  }
+})();
+</script>
